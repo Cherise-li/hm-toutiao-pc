@@ -1,12 +1,14 @@
 <template>
-  <div id="app">根组件</div>
+  <div id="app" class="container">
+    <!-- 一级路由组件显示的位置 -->
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
-<style lang="less">
-</style>
+<style scoped lang="less"></style>
