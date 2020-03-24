@@ -62,8 +62,8 @@ export default {
     };
     return {
       loginForm: {
-        mobile: "",
-        code: ""
+        mobile: "13911111111",
+        code: "246810"
       },
       loginRules: {
         mobile: [
@@ -89,7 +89,7 @@ export default {
           this.$http
             .post("authorizations", this.loginForm)
             .then(() => {
-              this.$router.push("/index");
+              this.$router.push("/");
             })
             .catch(() => {
               this.$message.error("手机号或验证码错误!");
