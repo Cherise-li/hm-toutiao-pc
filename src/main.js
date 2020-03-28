@@ -4,6 +4,9 @@ import App from "@/App.vue";
 import ElementUi from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUi);
+//导入自己的插件
+import plugin from "@/utils/plugin";
+Vue.use(plugin);
 
 //导入路由实例
 import router from "@/router/index";

@@ -1,13 +1,18 @@
 <template>
   <div class="sucai-container">
-    素菜管理
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <!-- 面包屑组件 -->
+        <my-bread>素材管理</my-bread>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
 export default {
-  name: "sucai"
-};
+  name: 'sucai'
+}
 </script>
 
 <style scoped lang="less"></style>

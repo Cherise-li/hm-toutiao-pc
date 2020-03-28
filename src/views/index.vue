@@ -1,51 +1,54 @@
 <template>
   <el-container class="home-container">
-    <el-aside width="200px" class="aside">
+    <el-aside :width="isOpen?'200px':'68px'" class="aside">
       <!-- 侧边栏区域 -->
       <!-- 顶部logo -->
-      <div class="logo"></div>
+      <div class="logo" :class="{minLogo:!isOpen}"></div>
       <!-- 导航菜单组件 -->
       <el-menu
-        default-active="1"
+        :default-active="$route.path"
         background-color="#002233"
         text-color="#fff"
         active-text-color="#ffd04b"
         style="border-right:0"
+        :collapse="!isOpen"
+        :collapse-transition="false"
+        router
       >
         <!-- 首页 -->
-        <el-menu-item index="1">
-          <i class="el-icon-s-home"> </i>
-          <router-link to="/" slot="title">首页</router-link>
+        <el-menu-item index="/">
+          <i class="el-icon-s-home"></i>
+          <span slot="title">首页</span>
         </el-menu-item>
         <!-- 内容管理 -->
-        <el-menu-item index="2">
+        <el-menu-item index="/neirong">
           <i class="el-icon-document"></i>
-          <router-link to="/neirong" slot="title">内容管理</router-link>
+          <span slot="title">内容管理</span>
         </el-menu-item>
         <!-- 素材管理 -->
-        <el-menu-item index="3">
+        <el-menu-item index="/sucai">
           <i class="el-icon-picture"></i>
-          <router-link to="/sucai" slot="title">素材管理</router-link>
+          <span slot="title">素材管理</span>
         </el-menu-item>
         <!-- 发布文章 -->
-        <el-menu-item index="4">
+        <el-menu-item index="/publish">
           <i class="el-icon-s-promotion"></i>
-          <router-link to="/publish" slot="title">发布文章</router-link>
+          <span slot="title">发布文章</span>
         </el-menu-item>
         <!-- 评论管理 -->
-        <el-menu-item index="5">
+        <el-menu-item index="/comment">
           <i class="el-icon-chat-line-square"></i>
-          <router-link to="/comment" slot="title">评论管理</router-link>
+          <span slot="title">评论管理</span>
         </el-menu-item>
         <!-- 粉丝管理 -->
-        <el-menu-item index="6">
+        <el-menu-item index="/fans">
           <i class="el-icon-present"></i>
-          <router-link to="/fans" slot="title">粉丝管理</router-link>
+          <span slot="title">粉丝管理</span>
         </el-menu-item>
         <!-- 个人设置 -->
-        <el-menu-item index="7">
+        <el-menu-item index="/per">
           <i class="el-icon-menu"></i>
-          <router-link to="/per" slot="title">个人设置</router-link>
+          <span slot="title">个人设置</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -53,18 +56,18 @@
       <el-header class="header">
         <!-- 头部内容 -->
         <!-- 左边区域 -->
-        <span class="el-icon-s-fold"></span>
+        <span class="el-icon-s-fold" @click="kh()"></span>
         <span class="text">江苏传智播客科技教育有限公司</span>
         <!-- 右边区域 -->
-        <el-dropdown trigger="click" class="right">
+        <el-dropdown trigger="click" class="right" @command="handleClick">
           <span class="el-dropdown-link">
-            <img src="../assets/images/avatar.jpg" alt="" />
-            <span class="text"> 颜颜</span>
+            <img :src="photo" alt />
+            <span class="text">{{name}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人设置</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item command="setting">个人设置</el-dropdown-item>
+            <el-dropdown-item command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
@@ -76,9 +79,39 @@
 </template>
 
 <script>
+import user from '@/utils/data'
 export default {
-  name: "my-index"
-};
+  name: 'my-index',
+  data() {
+    return {
+      isOpen: 'true',
+      name: '',
+      photo: ''
+    }
+  },
+  created() {
+    const data = user.getUser()
+    this.name = data.name
+    this.photo = data.photo
+  },
+  methods: {
+    kh() {
+      this.isOpen = !this.isOpen
+    },
+    setting() {
+      this.$router.push('/setting')
+    },
+    logout() {
+      user.delUser()
+      this.$router.push('/login')
+    },
+    handleClick(command) {
+      console.log('ok')
+
+      this[command]()
+    }
+  }
+}
 </script>
 
 <style scoped lang="less">
@@ -96,12 +129,16 @@ export default {
       background: #002244 url(../assets/images/logo_admin.png) no-repeat
         center/140px auto;
     }
+    .minLogo {
+      background-image: url(../assets/images/logo_admin_01.png);
+      background-size: 36px auto;
+    }
   }
 
-  .router-link {
-    font-size: 30px;
-    color: white;
-  }
+  // .router-link {
+  //   font-size: 30px;
+  //   color: white;
+  // }
   .header {
     border-bottom: 1px solid #ccc;
     line-height: 60px;
