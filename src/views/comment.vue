@@ -1,9 +1,9 @@
 <template>
-  <div class="publish-container">
+  <div class="container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <!-- 面包屑组件 -->
-        <my-bread>发布文章</my-bread>
+        <my-bread>评论管理</my-bread>
       </div>
     </el-card>
   </div>
@@ -11,8 +11,8 @@
 
 <script>
 export default {
-  name: 'Publish'
+  name: 'comment'
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang='less'></style>

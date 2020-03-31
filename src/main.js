@@ -1,5 +1,6 @@
 import Vue from "vue";
 import App from "@/App.vue";
+
 //引入组件
 import ElementUi from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
@@ -13,6 +14,8 @@ import router from "@/router/index";
 //导入axios
 import axios from "@/api";
 Vue.prototype.$http = axios;
+// 导入公用样式
+import "@/styles/index.less";
 
 Vue.config.productionTip = false;
 

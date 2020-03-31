@@ -12,6 +12,9 @@ import Neirong from "@/views/content";
 import Sucai from "@/views/sucai";
 import Publish from "@/views/publish";
 import Notfound from "@/views/notfound";
+import Comment from "@/views/comment";
+import Fans from "@/views/fans";
+import Per from "@/views/per";
 
 //定义路由规则
 const routes = [
@@ -24,7 +27,10 @@ const routes = [
       { path: "/", component: Welcome },
       { path: "/neirong", component: Neirong },
       { path: "/sucai", component: Sucai },
-      { path: "/publish", component: Publish }
+      { path: "/publish", component: Publish },
+      { path: "/comment", component: Comment },
+      { path: "/fans", component: Fans },
+      { path: "/per", component: Per }
     ]
   },
   { path: "*", component: Notfound }

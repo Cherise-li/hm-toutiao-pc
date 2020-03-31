@@ -20,7 +20,12 @@
         </el-form-item>
         <!-- 频道栏 -->
         <el-form-item label="频道:">
-          <el-select v-model="reqParams.channel_id" placeholder="请选择">
+          <el-select
+            @change="kongChannel"
+            clearable
+            v-model="reqParams.channel_id"
+            placeholder="请选择"
+          >
             <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -33,11 +38,13 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+              @change="changeDate"
             ></el-date-picker>
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">筛选</el-button>
+          <el-button type="primary" @click="filter">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -45,18 +52,56 @@
     <el-card class="box-card" style="margin-top:20px">
       <!-- 头部 -->
       <div slot="header" class="clearfix">
-        <span>根据筛选条件共查询到{{count}}条结果</span>
+        <span>根据筛选条件共查询到{{ count }}条结果</span>
       </div>
       <!-- 表格 -->
       <el-table :data="articles">
-        <el-table-column label="封面"></el-table-column>
+        <el-table-column label="封面">
+          <template slot-scope="scope">
+            <el-image
+              fit="cover"
+              :src="scope.row.cover.images[0]"
+              style=" width:150px;height:120px"
+            >
+              <div slot="error" class="image-slot">
+                <img src="@/assets/images/error.gif" alt style=" width:150px;height:120px" />
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
-        <el-table-column label="发布状态"></el-table-column>
+        <el-table-column label="发布状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status === 0">草稿</el-tag>
+            <el-tag v-if="scope.row.status === 2" type="success">审核通过</el-tag>
+            <el-tag type="info" v-if="scope.row.status === 1">待审核</el-tag>
+            <el-tag v-if="scope.row.status === 3" type="warning">审核失败</el-tag>
+            <el-tag v-if="scope.row.status === 4" type="danger">已删除</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="时间" prop="pubdate"></el-table-column>
-        <el-table-column label="操作"></el-table-column>
+        <el-table-column label="操作" width="120px">
+          <template slot-scope="scope">
+            <el-button @click="edit(scope.row.id)" type="primary" icon="el-icon-edit" circle plain></el-button>
+            <el-button
+              @click="delArticle(scope.row.id)"
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              plain
+            ></el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-pagination background layout="prev, pager, next" :total="90"></el-pagination>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :page-size="reqParams.per_page"
+        :total="count"
+        :current-page="reqParams.page"
+        @current-change="changePage"
+      ></el-pagination>
       <!-- :total不能绑定count,未解决-->
     </el-card>
   </div>
@@ -85,12 +130,52 @@ export default {
         const {
           data: { data }
         } = await this.$http.get('articles', { params: this.reqParams })
-        console.log(data)
+
         this.articles = data.results
         this.count = data.total_count
       } catch (e) {
         this.$message.error('获取文章列表失败!')
       }
+    },
+    changePage(newPge) {
+      //根据新的页码,重新获取列表数据即可
+      this.reqParams.page = newPge
+      this.getData()
+    },
+    changeDate(dateArr) {
+      if (dateArr !== '') {
+        this.reqParams.begin_pubdate = dateArr[0]
+        this.reqParams.end_pubdate = dateArr[1]
+      }
+    },
+    filter() {
+      this.reqParams.page = 1
+      this.getData()
+    },
+    kongChannel(value) {
+      if (value === '') {
+        this.reqParams.channel_id = null
+      }
+    },
+    edit(id) {
+      this.$router.push(`/publish?id=${id}`)
+    },
+    delArticle(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          try {
+            await this.$http.delete(`articles/${id}`)
+            this.$message.success('删除成功!')
+            this.getData()
+          } catch (e) {
+            this.$message.error('删除失败!')
+          }
+        })
+        .catch(() => {})
     }
   },
 
@@ -110,7 +195,7 @@ export default {
       date: [],
       options: [],
       articles: [],
-      count: ''
+      count: 0
     }
   }
 }
