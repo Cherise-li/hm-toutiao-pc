@@ -99,7 +99,7 @@ export default {
       this.isOpen = !this.isOpen
     },
     setting() {
-      this.$router.push('/setting')
+      this.$router.push('/per')
     },
     logout() {
       user.delUser()

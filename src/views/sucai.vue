@@ -10,7 +10,11 @@
 
       <!-- 卡片内容 -->
       <div>
-        <el-radio-group @change="changeCollect()" v-model="reqParams.collect" size="small">
+        <el-radio-group
+          @change="changeCollect()"
+          v-model="reqParams.collect"
+          size="small"
+        >
           <el-radio-button :label="false">全部</el-radio-button>
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
@@ -19,22 +23,23 @@
           type="success"
           size="small"
           style="float:right"
-        >添加素材</el-button>
+          >添加素材</el-button
+        >
       </div>
       <!-- 图片区域 -->
       <div>
         <div class="img" v-for="item in images" :key="item.id">
           <img :src="item.url" alt />
-          <div class="icon" v-if="reqParams.collect===false">
+          <div class="icon" v-if="reqParams.collect === false">
             <span
               class="el-icon-star-off"
-              :style="{color:item.is_collected? 'red':'#fff'}"
-              @click="collected(item.id,item.is_collected)"
+              :style="{ color: item.is_collected ? 'red' : '#fff' }"
+              @click="collected(item.id, item.is_collected)"
             ></span>
             <span class="el-icon-delete" @click="delCollect(item.id)"></span>
           </div>
         </div>
-        <div class="div" v-if="images.length===0">暂无数据</div>
+        <div class="div" v-if="images.length === 0">暂无数据</div>
       </div>
 
       <!-- 分页 -->
@@ -66,9 +71,9 @@
 </template>
 
 <script>
-import auth from '@/utils/data'
+import auth from "@/utils/data";
 export default {
-  name: 'sucai',
+  name: "sucai",
   data() {
     return {
       reqParams: {
@@ -80,38 +85,38 @@ export default {
       images: [],
       dialogVisible: false,
       //上传成功后的图片地址
-      imageUrl: '',
+      imageUrl: "",
       headers: { Authorization: `Bearer ${auth.getUser().token}` }
-    }
+    };
   },
   created() {
-    this.getData()
+    this.getData();
   },
   methods: {
     // openAddDialog() {
     //   this.dialogVisible = true
     // },
     handleAvatarSuccess(res) {
-      this.imageUrl = res.data.url
-      this.$message.success('上传图片成功')
+      this.imageUrl = res.data.url;
+      this.$message.success("上传图片成功");
       setTimeout(() => {
-        this.dialogVisible = false
-        this.getData()
-        this.reqParams.page = 1
-        this.imageUrl = null
-      }, 2000)
+        this.dialogVisible = false;
+        this.getData();
+        this.reqParams.page = 1;
+        this.imageUrl = null;
+      }, 2000);
     },
     //获取素材列表
     async getData() {
       const {
         data: { data }
-      } = await this.$http.get('user/images', { params: this.reqParams })
-      this.count = data.total_count
-      this.images = data.results
+      } = await this.$http.get("user/images", { params: this.reqParams });
+      this.count = data.total_count;
+      this.images = data.results;
     },
     changePage(newPage) {
-      this.reqParams.page = newPage
-      this.getData()
+      this.reqParams.page = newPage;
+      this.getData();
     },
     async collected(id, status) {
       try {
@@ -119,39 +124,39 @@ export default {
           data: { data }
         } = await this.$http.put(`user/images/${id}`, {
           collect: !status
-        })
+        });
         //data中的collect是修改后的图片状态
-        this.$message.success(data.collect ? '收藏成功' : '取消收藏成功')
+        this.$message.success(data.collect ? "收藏成功" : "取消收藏成功");
         //视图: 收藏按钮颜色样式,数据驱动视图
-        this.getData()
+        this.getData();
         // item.is_collected = data.collect
       } catch (e) {
-        this.$message.error('操作失败')
+        this.$message.error("操作失败");
       }
     },
     delCollect(id) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(async () => {
           try {
-            await this.$http.delete(`user/images/${id}`)
-            this.$message.success('删除成功!')
-            this.getData()
+            await this.$http.delete(`user/images/${id}`);
+            this.$message.success("删除成功!");
+            this.getData();
           } catch (e) {
-            this.$message.error('删除失败!')
+            this.$message.error("删除失败!");
           }
         })
-        .catch(() => {})
+        .catch(() => {});
     },
     changeCollect() {
-      this.reqParams.page = 1
-      this.getData()
+      this.reqParams.page = 1;
+      this.getData();
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">

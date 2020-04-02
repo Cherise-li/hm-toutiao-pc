@@ -20,14 +20,7 @@
         </el-form-item>
         <!-- 频道栏 -->
         <el-form-item label="频道:">
-          <el-select
-            @change="kongChannel"
-            clearable
-            v-model="reqParams.channel_id"
-            placeholder="请选择"
-          >
-            <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <my-channel :value="reqParams.channel_id" @input="reqParams.channel_id=$event"></my-channel>
         </el-form-item>
         <!-- 日期栏 -->
         <el-form-item label="日期:">
@@ -112,19 +105,9 @@ export default {
   name: 'Neirong',
   created() {
     console.log('发起请求')
-    this.getData(), this.getChannels()
+    this.getData()
   },
   methods: {
-    async getChannels() {
-      try {
-        const {
-          data: { data }
-        } = await this.$http.get('channels')
-        this.options = data.channels
-      } catch (e) {
-        this.$message.error('获取文章频道失败!')
-      }
-    },
     async getData() {
       try {
         const {
@@ -152,11 +135,7 @@ export default {
       this.reqParams.page = 1
       this.getData()
     },
-    kongChannel(value) {
-      if (value === '') {
-        this.reqParams.channel_id = null
-      }
-    },
+
     edit(id) {
       this.$router.push(`/publish?id=${id}`)
     },
@@ -193,7 +172,6 @@ export default {
       },
       //当日期控件选择了日期后,给reqParams中的数据动态赋值
       date: [],
-      options: [],
       articles: [],
       count: 0
     }
