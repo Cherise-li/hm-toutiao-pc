@@ -5,16 +5,16 @@ Vue.use(VueRouter);
 import user from "@/utils/data";
 
 //导入路由组件
-import Login from "@/views/login";
-import Index from "@/views/index";
-import Welcome from "@/views/welcome";
-import Neirong from "@/views/content";
-import Sucai from "@/views/sucai";
-import Publish from "@/views/publish";
-import Notfound from "@/views/notfound";
-import Comment from "@/views/comment";
-import Fans from "@/views/fans";
-import Per from "@/views/per";
+const Login = () => import("@/views/login");
+const Index = () => import("@/views/index");
+const Welcome = () => import("@/views/welcome");
+const Neirong = () => import("@/views/content");
+const Sucai = () => import("@/views/sucai");
+const Publish = () => import("@/views/publish");
+const Notfound = () => import("@/views/notfound");
+const Comment = () => import("@/views/comment");
+const Fans = () => import("@/views/fans");
+const Per = () => import("@/views/per");
 
 //定义路由规则
 const routes = [

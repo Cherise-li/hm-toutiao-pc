@@ -1,9 +1,9 @@
 <template>
   <el-container class="home-container">
-    <el-aside :width="isOpen?'200px':'68px'" class="aside">
+    <el-aside :width="isOpen ? '200px' : '68px'" class="aside">
       <!-- 侧边栏区域 -->
       <!-- 顶部logo -->
-      <div class="logo" :class="{minLogo:!isOpen}"></div>
+      <div class="logo" :class="{ minLogo: !isOpen }"></div>
       <!-- 导航菜单组件 -->
       <el-menu
         :default-active="$route.path"
@@ -62,7 +62,7 @@
         <el-dropdown trigger="click" class="right" @command="handleClick">
           <span class="el-dropdown-link">
             <img :src="photo" alt />
-            <span class="text">{{name}}</span>
+            <span class="text">{{ name }}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -79,39 +79,48 @@
 </template>
 
 <script>
-import user from '@/utils/data'
+import eventBus from "@/utils/eventBus";
+import user from "@/utils/data";
+
 export default {
-  name: 'my-index',
+  name: "my-index",
   data() {
     return {
-      isOpen: 'true',
-      name: '',
-      photo: ''
-    }
+      isOpen: "true",
+      name: "",
+      photo: ""
+    };
   },
   created() {
-    const data = user.getUser()
-    this.name = data.name
-    this.photo = data.photo
+    const data = user.getUser();
+    this.name = data.name;
+    this.photo = data.photo;
+
+    eventBus.$on("eventFormA", val => {
+      this.name = val;
+    });
+    eventBus.$on("upPhoto", val => {
+      this.photo = val;
+    });
   },
   methods: {
     kh() {
-      this.isOpen = !this.isOpen
+      this.isOpen = !this.isOpen;
     },
     setting() {
-      this.$router.push('/per')
+      this.$router.push("/per");
     },
     logout() {
-      user.delUser()
-      this.$router.push('/login')
+      user.delUser();
+      this.$router.push("/login");
     },
     handleClick(command) {
-      console.log('ok')
+      console.log("ok");
 
-      this[command]()
+      this[command]();
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">
